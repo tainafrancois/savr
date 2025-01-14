@@ -1,30 +1,43 @@
-import React from 'react'
-import Searchbar from "@/components/Searchbar"
-import HeroCarousel from "@/components/HeroCarousel"
+import React, { useRef, useEffect } from "react";
+import Searchbar from "@/components/Searchbar";
+import HeroCarousel from "@/components/HeroCarousel";
+import { getAllProducts } from "@/lib/actions";
+import ProductCard from "@/components/ProductCard";
 
-const Home = () => {
+const Home = async () => { 
+  const allProducts = await getAllProducts(); 
+
   return (
     <>
       <section className="px-6 md:px-20 py-24">
         <div className="flex max-xl:flex-col gap-16">
           <div className="flex flex-col justify-center">
-            <p className="small-text">
-              Track Amazon's Best Prices Here:
+            <p className="small-text">Track Amazon's Best Prices Here:</p>
+            <h1 className="head-text">Save more on your favorite products</h1>
+            <p className="mt-6">
+              Stay ahead of every deal with real-time price tracking, historical
+              price analysis, and smart alerts to ensure you never miss out on
+              the best discounts.
             </p>
-            <h1 className="head-text">
-            Save more on your favorite products
-            </h1>
-            <p className="mt-6">Stay ahead of every deal with real-time price tracking, historical price analysis, and smart alerts to ensure you never miss out on the best discounts.</p>
 
-            <Searchbar></Searchbar>
+            <Searchbar />
           </div>
 
-          <HeroCarousel></HeroCarousel>
+          <HeroCarousel />
+        </div>
+      </section>
 
+      <section id="results" className="trending-section">
+        <h2 className="section-text">Results</h2>
+
+        <div className="flex flex-wrap gap-x-8 gap-y-16">
+          {allProducts?.slice().reverse().map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
         </div>
       </section>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

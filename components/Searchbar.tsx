@@ -1,63 +1,57 @@
-"use client"
+"use client"; 
 
-import { FormEvent, useState } from "react"
+import { scrapeAndStoreProduct } from "@/lib/actions";
+import { FormEvent, useState } from "react";
 
 const isValidAmazonProductURL = (url: string) => {
-    try {
-        const parsedURL = new URL(url);
-        const hostname = parsedURL.hostname;
-
-        if (hostname.includes('amazon.ca') || 
-            hostname.includes('amazon.') ||
-            hostname.includes('amazon'))
-            {
-                return true;
-            }
-    } catch (error) {
-        return false;
-    }
+  try {
+    const parsedURL = new URL(url);
+    return parsedURL.hostname.includes("amazon");
+  } catch (error) {
     return false;
-}
+  }
+};
 
 const Searchbar = () => {
-  const [searchPrompt, setSearchPrompt] = useState('');
+  const [searchPrompt, setSearchPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const isValidLink = isValidAmazonProductURL(searchPrompt);
-
-    if(!isValidLink) return alert('Please provide a valid amazon link')
+    if (!isValidLink) return alert("Please provide a valid Amazon link");
 
     try {
-        setIsLoading(true);
+      setIsLoading(true);
+      await scrapeAndStoreProduct(searchPrompt);
 
-        // Scrape
+      // Scroll to results section
+      const resultsSection = document.getElementById("results");
+      if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: "smooth" });
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <form 
-        className="flex flex-wrap gap-4 mt-12" 
-        onSubmit={handleSubmit}
-    >
-        <input 
-            type="text" 
-            value={searchPrompt}
-            onChange={(e) => setSearchPrompt(e.target.value)}
-            placeholder="Enter product link" 
-            className="searchbar-input"
-        />
-        <button type="submit" className="searchbar-btn" disabled={searchPrompt === ''}>
-            {isLoading ? 'Searching...' : 'Search'}
-        </button>
+    <form className="flex flex-wrap gap-4 mt-12" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={searchPrompt}
+        onChange={(e) => setSearchPrompt(e.target.value)}
+        placeholder="Enter the Amazon product URL"
+        className="searchbar-input"
+      />
+      <button type="submit" className="searchbar-btn" disabled={searchPrompt === ""}>
+        {isLoading ? "Searching..." : "Search"}
+      </button>
     </form>
-  )
-}
+  );
+};
 
-export default Searchbar
+export default Searchbar;
