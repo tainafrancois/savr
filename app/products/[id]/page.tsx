@@ -9,8 +9,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 type Props = {
-  params: { id: string }
-}
+  params: { id: string };
+};
 
 const ProductDetails = async ({ params }: Props) => {
   const { id } = await params;  // Await params before accessing its properties

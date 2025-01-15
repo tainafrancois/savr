@@ -52,7 +52,7 @@ export async function scrapeAndStoreProduct(productUrl: string) {
 
 export async function getProductById(productId: string) {
   try {
-    connectToDB();
+    await connectToDB();
 
     const product = await Product.findOne({ _id: productId });
 
@@ -61,6 +61,7 @@ export async function getProductById(productId: string) {
     return product;
   } catch (error) {
     console.log(error);
+    return null;
   }
 }
 
