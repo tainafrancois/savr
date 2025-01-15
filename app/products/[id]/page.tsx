@@ -1,4 +1,4 @@
-//import Modal from "@/components/Modal";
+import Modal from "@/components/Modal";
 import PriceInfoCard from "@/components/PriceInfoCard";
 import ProductCard from "@/components/ProductCard";
 import { getProductById} from "@/lib/actions"
@@ -15,7 +15,6 @@ type Props = {
 
 
 const ProductDetails = async ({ params: { id } }: Props) => {
-
   const product: Product = await getProductById(id);
 
   if(!product) redirect('/')
@@ -108,6 +107,8 @@ const ProductDetails = async ({ params: { id } }: Props) => {
               />
             </div>
           </div>
+
+          <Modal productId={id} />
         </div>
       </div>
 
