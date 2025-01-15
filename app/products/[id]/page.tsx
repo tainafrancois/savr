@@ -1,24 +1,23 @@
 import Modal from "@/components/Modal";
 import PriceInfoCard from "@/components/PriceInfoCard";
 import ProductCard from "@/components/ProductCard";
-import { getProductById} from "@/lib/actions"
+import { getProductById } from "@/lib/actions"
 import { formatNumber } from "@/lib/utils";
 import { Product } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-
 type Props = {
-    params: { id: string }
-  }
+  params: { id: string }
+}
 
-
-const ProductDetails = async ({ params: { id } }: Props) => {
+const ProductDetails = async ({ params }: Props) => {
+  const { id } = await params;  // Await params before accessing its properties
   const product: Product = await getProductById(id);
 
   if(!product) redirect('/')
-    
+
   return (
     <div className="product-container">
       <div className="flex gap-28 xl:flex-row flex-col">
